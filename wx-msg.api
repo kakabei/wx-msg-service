@@ -1,0 +1,56 @@
+syntax = "v1"
+
+info (
+	desc:   "微信回调服务"
+	author: "kane"
+	email:  "fangshenghui@gmail.com"
+)
+
+type (
+	CommonRet {
+		Code      int    `json:"code"`
+		Msg       string `json:"msg,omitempty"`
+		RequestID string `json:"request_id,omitempty"`
+	}
+)
+
+type (
+	CheckWxSignatureReq {
+		Singnature string `form:"signature"`
+		Echostr    string `form:"echostr"`
+		Timestamp  int64  `form:"timestamp"`
+		Nonce      string `form:"nonce"`
+	}
+	CheckWxSignatureResp {
+		Echostr string `json:"echostr"`
+	}
+
+	ReceiveWxMsgReq {
+		ToUserName   string `xml:"ToUserName"`
+		FromUserName string `xml:"FromUserName"`
+		CreateTime   int64  `xml:"CreateTime"`
+		MsgType      string `xml:"MsgType"`
+		Event        string `xml:"Event"`
+		EventKey     string `xml:"EventKey"`
+		Ticket       string `xml:"Ticket"`
+	}
+
+	ReceiveWxMsgResp {
+		XmlData string `json:"xml_data"`
+	}
+)
+
+@server (
+	prefix: /v1/service/wx
+)
+service wx-msg-api {
+
+	// 微信平台扫码公众号回调接口
+	@handler CheckWxSignature
+	get /wxmsg (CheckWxSignatureReq) returns (CheckWxSignatureResp)
+
+	// 微信平台扫码公众号回调接口
+	@handler ReceiveWxMsg
+	post /wxmsg (ReceiveWxMsgReq) returns (ReceiveWxMsgResp)
+
+}

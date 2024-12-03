@@ -1,0 +1,6 @@
+FROM golang:1.21.3-alpine 
+COPY wx-msg-service /go
+RUN mkdir /go/logs /go/etc \
+    && cd /go \
+EXPOSE 38116
+CMD ["/go/wx-msg-service"]
